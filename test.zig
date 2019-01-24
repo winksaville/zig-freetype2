@@ -1,5 +1,6 @@
 const std = @import("std");
 const assert = std.debug.assert;
+const warn = std.debug.warn;
 
 const ft2 = @import("freetype2.zig");
 
@@ -13,7 +14,7 @@ test "test-freetype2" {
     var library: ft2.FT_Library = undefined;
     assert( ft2.FT_Init_FreeType( &library ) == 0);
 
-    const cfilename = c"modules/3d-test-resources/liberation-fonts-ttf-2.00.4/liberation/LiberationSans-Regular.ttf";
+    const cfilename = c"modules/3d-test-resources/liberation-fonts-ttf-2.00.4/LiberationSans-Regular.ttf";
 
     var face: ?*ft2.FT_Face = undefined;
     assert(ft2.FT_New_Face(library, cfilename, 0, &face) == 0);
