@@ -6,7 +6,7 @@ pub const FT_Fast = c_int;
 pub const FT_UFast = c_uint;
 pub const FT_Int64 = c_long;
 pub const FT_UInt64 = c_ulong;
-pub const FT_Memory = ?[*]struct_FT_MemoryRec_;
+pub const FT_Memory = ?*struct_FT_MemoryRec_;
 pub const FT_Alloc_Func = ?extern fn(FT_Memory, c_long) ?*c_void;
 pub const FT_Free_Func = ?extern fn(FT_Memory, ?*c_void) void;
 pub const FT_Realloc_Func = ?extern fn(FT_Memory, c_long, c_long, ?*c_void) ?*c_void;
@@ -21,7 +21,7 @@ pub const union_FT_StreamDesc_ = extern union {
     pointer: ?*c_void,
 };
 pub const FT_StreamDesc = union_FT_StreamDesc_;
-pub const FT_Stream = ?[*]struct_FT_StreamRec_;
+pub const FT_Stream = ?*struct_FT_StreamRec_;
 pub const FT_Stream_IoFunc = ?extern fn(FT_Stream, c_ulong, ?[*]u8, c_ulong) c_ulong;
 pub const FT_Stream_CloseFunc = ?extern fn(FT_Stream) void;
 pub const struct_FT_StreamRec_ = extern struct {
@@ -198,17 +198,17 @@ pub const struct_FT_Generic_ = extern struct {
     finalizer: FT_Generic_Finalizer,
 };
 pub const FT_Generic = struct_FT_Generic_;
-pub const FT_ListNode = ?[*]struct_FT_ListNodeRec_;
+pub const FT_ListNode = ?*struct_FT_ListNodeRec_;
 pub const struct_FT_ListNodeRec_ = extern struct {
-    prev: FT_ListNode,
-    next: FT_ListNode,
+    prev: ?*struct_FT_ListNodeRec_,
+    next: ?*struct_FT_ListNodeRec_,
     data: ?*c_void,
 };
 pub const struct_FT_ListRec_ = extern struct {
     head: FT_ListNode,
     tail: FT_ListNode,
 };
-pub const FT_List = ?[*]struct_FT_ListRec_;
+pub const FT_List = ?*struct_FT_ListRec_;
 pub const FT_ListNodeRec = struct_FT_ListNodeRec_;
 pub const FT_ListRec = struct_FT_ListRec_;
 pub const FT_Mod_Err_Base = 0;
@@ -356,7 +356,7 @@ pub const struct_FT_DriverRec_ = @OpaqueType();
 pub const FT_Driver = ?*struct_FT_DriverRec_;
 pub const struct_FT_RendererRec_ = @OpaqueType();
 pub const FT_Renderer = ?*struct_FT_RendererRec_;
-pub const FT_Face = ?[*]struct_FT_FaceRec_;
+pub const FT_Face = ?*struct_FT_FaceRec_;
 pub const FT_ENCODING_NONE = enum_FT_Encoding_.FT_ENCODING_NONE;
 pub const FT_ENCODING_MS_SYMBOL = enum_FT_Encoding_.FT_ENCODING_MS_SYMBOL;
 pub const FT_ENCODING_UNICODE = enum_FT_Encoding_.FT_ENCODING_UNICODE;
@@ -427,7 +427,7 @@ pub const struct_FT_CharMapRec_ = extern struct {
     platform_id: FT_UShort,
     encoding_id: FT_UShort,
 };
-pub const FT_CharMap = ?[*]struct_FT_CharMapRec_;
+pub const FT_CharMap = ?*struct_FT_CharMapRec_;
 pub const struct_FT_SubGlyphRec_ = @OpaqueType();
 pub const FT_SubGlyph = ?*struct_FT_SubGlyphRec_;
 pub const struct_FT_Slot_InternalRec_ = @OpaqueType();
@@ -456,7 +456,7 @@ pub const struct_FT_GlyphSlotRec_ = extern struct {
     other: ?*c_void,
     internal: FT_Slot_Internal,
 };
-pub const FT_GlyphSlot = ?[*]struct_FT_GlyphSlotRec_;
+pub const FT_GlyphSlot = ?*struct_FT_GlyphSlotRec_;
 pub const struct_FT_Size_Metrics_ = extern struct {
     x_ppem: FT_UShort,
     y_ppem: FT_UShort,
@@ -476,7 +476,7 @@ pub const struct_FT_SizeRec_ = extern struct {
     metrics: FT_Size_Metrics,
     internal: FT_Size_Internal,
 };
-pub const FT_Size = ?[*]struct_FT_SizeRec_;
+pub const FT_Size = ?*struct_FT_SizeRec_;
 pub const struct_FT_Face_InternalRec_ = @OpaqueType();
 pub const FT_Face_Internal = ?*struct_FT_Face_InternalRec_;
 pub const struct_FT_FaceRec_ = extern struct {
@@ -490,8 +490,9 @@ pub const struct_FT_FaceRec_ = extern struct {
     num_fixed_sizes: FT_Int,
     available_sizes: ?[*]FT_Bitmap_Size,
     num_charmaps: FT_Int,
-    charmaps: ?[*]FT_CharMap,
+    //charmaps: ?[*]FT_CharMap,
     generic: FT_Generic,
+
     bbox: FT_BBox,
     units_per_EM: FT_UShort,
     ascender: FT_Short,
@@ -501,12 +502,12 @@ pub const struct_FT_FaceRec_ = extern struct {
     max_advance_height: FT_Short,
     underline_position: FT_Short,
     underline_thickness: FT_Short,
-    glyph: FT_GlyphSlot,
-    size: FT_Size,
-    charmap: FT_CharMap,
+    //glyph: FT_GlyphSlot,
+    //size: FT_Size,
+    //charmap: FT_CharMap,
     driver: FT_Driver,
-    memory: FT_Memory,
-    stream: FT_Stream,
+    //memory: FT_Memory,
+    //stream: FT_Stream,
     sizes_list: FT_ListRec,
     autohint: FT_Generic,
     extensions: ?*c_void,
@@ -535,9 +536,9 @@ pub const struct_FT_Open_Args_ = extern struct {
     params: ?[*]FT_Parameter,
 };
 pub const FT_Open_Args = struct_FT_Open_Args_;
-pub extern fn FT_New_Face(library: FT_Library, filepathname: ?[*]const u8, face_index: FT_Long, aface: ?[*]FT_Face) FT_Error;
-pub extern fn FT_New_Memory_Face(library: FT_Library, file_base: ?[*]const FT_Byte, file_size: FT_Long, face_index: FT_Long, aface: ?[*]FT_Face) FT_Error;
-pub extern fn FT_Open_Face(library: FT_Library, args: ?[*]const FT_Open_Args, face_index: FT_Long, aface: ?[*]FT_Face) FT_Error;
+pub extern fn FT_New_Face(library: FT_Library, filepathname: ?[*]const u8, face_index: FT_Long, aface: ?*FT_Face) FT_Error;
+pub extern fn FT_New_Memory_Face(library: FT_Library, file_base: ?[*]const FT_Byte, file_size: FT_Long, face_index: FT_Long, aface: ?*FT_Face) FT_Error;
+pub extern fn FT_Open_Face(library: FT_Library, args: ?[*]const FT_Open_Args, face_index: FT_Long, aface: ?*FT_Face) FT_Error;
 pub extern fn FT_Attach_File(face: FT_Face, filepathname: ?[*]const u8) FT_Error;
 pub extern fn FT_Attach_Stream(face: FT_Face, parameters: ?[*]FT_Open_Args) FT_Error;
 pub extern fn FT_Reference_Face(face: FT_Face) FT_Error;
@@ -566,7 +567,7 @@ pub const struct_FT_Size_RequestRec_ = extern struct {
     vertResolution: FT_UInt,
 };
 pub const FT_Size_RequestRec = struct_FT_Size_RequestRec_;
-pub const FT_Size_Request = ?[*]struct_FT_Size_RequestRec_;
+pub const FT_Size_Request = ?*struct_FT_Size_RequestRec_;
 pub extern fn FT_Request_Size(face: FT_Face, req: FT_Size_Request) FT_Error;
 pub extern fn FT_Set_Char_Size(face: FT_Face, char_width: FT_F26Dot6, char_height: FT_F26Dot6, horz_resolution: FT_UInt, vert_resolution: FT_UInt) FT_Error;
 pub extern fn FT_Set_Pixel_Sizes(face: FT_Face, pixel_width: FT_UInt, pixel_height: FT_UInt) FT_Error;

@@ -13,6 +13,11 @@ test "test-freetype2" {
     var library: ft2.FT_Library = undefined;
     assert( ft2.FT_Init_FreeType( &library ) == 0);
 
+    const cfilename = c"modules/3d-test-resources/liberation-fonts-ttf-2.00.4/liberation/LiberationSans-Regular.ttf";
+
+    var face: ft2.FT_Face = undefined;
+    assert(ft2.FT_New_Face(library, cfilename, 0, &face) == 0);
+
     var image: [HEIGHT][WIDTH]u8 = undefined;
 
     var x: usize = 0;
