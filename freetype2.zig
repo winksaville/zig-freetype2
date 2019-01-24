@@ -435,7 +435,7 @@ pub const FT_Slot_Internal = ?*struct_FT_Slot_InternalRec_;
 pub const struct_FT_GlyphSlotRec_ = extern struct {
     library: FT_Library,
     face: ?*FT_Face,
-    next: FT_GlyphSlot,
+    next: ?*FT_GlyphSlot,
     reserved: FT_UInt,
     generic: FT_Generic,
     metrics: FT_Glyph_Metrics,
@@ -456,7 +456,7 @@ pub const struct_FT_GlyphSlotRec_ = extern struct {
     other: ?*c_void,
     internal: FT_Slot_Internal,
 };
-pub const FT_GlyphSlot = ?*struct_FT_GlyphSlotRec_;
+pub const FT_GlyphSlot = struct_FT_GlyphSlotRec_;
 pub const struct_FT_Size_Metrics_ = extern struct {
     x_ppem: FT_UShort,
     y_ppem: FT_UShort,
@@ -502,7 +502,7 @@ pub const struct_FT_FaceRec_ = extern struct {
     max_advance_height: FT_Short,
     underline_position: FT_Short,
     underline_thickness: FT_Short,
-    //glyph: FT_GlyphSlot,
+    glyph: ?*FT_GlyphSlot,
     size: FT_Size,
     //charmap: FT_CharMap,
     driver: FT_Driver,
@@ -589,7 +589,7 @@ pub const enum_FT_Render_Mode_ = extern enum {
     FT_RENDER_MODE_MAX = 5,
 };
 pub const FT_Render_Mode = enum_FT_Render_Mode_;
-pub extern fn FT_Render_Glyph(slot: FT_GlyphSlot, render_mode: FT_Render_Mode) FT_Error;
+pub extern fn FT_Render_Glyph(slot: ?*FT_GlyphSlot, render_mode: FT_Render_Mode) FT_Error;
 pub const FT_KERNING_DEFAULT = enum_FT_Kerning_Mode_.FT_KERNING_DEFAULT;
 pub const FT_KERNING_UNFITTED = enum_FT_Kerning_Mode_.FT_KERNING_UNFITTED;
 pub const FT_KERNING_UNSCALED = enum_FT_Kerning_Mode_.FT_KERNING_UNSCALED;
@@ -611,7 +611,7 @@ pub extern fn FT_Get_First_Char(face: ?*FT_Face, agindex: ?[*]FT_UInt) FT_ULong;
 pub extern fn FT_Get_Next_Char(face: ?*FT_Face, char_code: FT_ULong, agindex: ?[*]FT_UInt) FT_ULong;
 pub extern fn FT_Face_Properties(face: ?*FT_Face, num_properties: FT_UInt, properties: ?[*]FT_Parameter) FT_Error;
 pub extern fn FT_Get_Name_Index(face: ?*FT_Face, glyph_name: ?[*]FT_String) FT_UInt;
-pub extern fn FT_Get_SubGlyph_Info(glyph: FT_GlyphSlot, sub_index: FT_UInt, p_index: ?[*]FT_Int, p_flags: ?[*]FT_UInt, p_arg1: ?[*]FT_Int, p_arg2: ?[*]FT_Int, p_transform: ?[*]FT_Matrix) FT_Error;
+pub extern fn FT_Get_SubGlyph_Info(glyph: ?*FT_GlyphSlot, sub_index: FT_UInt, p_index: ?[*]FT_Int, p_flags: ?[*]FT_UInt, p_arg1: ?[*]FT_Int, p_arg2: ?[*]FT_Int, p_transform: ?[*]FT_Matrix) FT_Error;
 pub extern fn FT_Get_FSType_Flags(face: ?*FT_Face) FT_UShort;
 pub extern fn FT_Face_GetCharVariantIndex(face: ?*FT_Face, charcode: FT_ULong, variantSelector: FT_ULong) FT_UInt;
 pub extern fn FT_Face_GetCharVariantIsDefault(face: ?*FT_Face, charcode: FT_ULong, variantSelector: FT_ULong) FT_Int;
