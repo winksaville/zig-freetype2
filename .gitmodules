@@ -1,3 +1,6 @@
 [submodule "modules/freetype2"]
 	path = modules/freetype2
 	url = git://git.sv.nongnu.org/freetype/freetype2.git
+[submodule "modules/3d-test-resources"]
+	path = modules/3d-test-resources
+	url = git@github.com:winksaville/3d-test-resources
