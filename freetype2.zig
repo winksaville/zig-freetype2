@@ -6,10 +6,10 @@ pub const FT_Fast = c_int;
 pub const FT_UFast = c_uint;
 pub const FT_Int64 = c_long;
 pub const FT_UInt64 = c_ulong;
-pub const FT_Memory = ?*struct_FT_MemoryRec_;
-pub const FT_Alloc_Func = ?extern fn(?*struct_FT_MemoryRec_, c_long) ?*c_void;
-pub const FT_Free_Func = ?extern fn(?*struct_FT_MemoryRec_, ?*c_void) void;
-pub const FT_Realloc_Func = ?extern fn(?*struct_FT_MemoryRec_, c_long, c_long, ?*c_void) ?*c_void;
+pub const FT_Memory = struct_FT_MemoryRec_;
+pub const FT_Alloc_Func = ?extern fn(?*FT_Memory, c_long) ?*c_void;
+pub const FT_Free_Func = ?extern fn(?*FT_Memory, ?*c_void) void;
+pub const FT_Realloc_Func = ?extern fn(?*FT_Memory, c_long, c_long, ?*c_void) ?*c_void;
 pub const struct_FT_MemoryRec_ = extern struct {
     user: ?*c_void,
     alloc: FT_Alloc_Func,
@@ -32,7 +32,7 @@ pub const struct_FT_StreamRec_ = extern struct {
     pathname: FT_StreamDesc,
     read: FT_Stream_IoFunc,
     close: FT_Stream_CloseFunc,
-    memory: FT_Memory,
+    memory: ?*FT_Memory,
     cursor: ?[*]u8,
     limit: ?[*]u8,
 };
@@ -506,7 +506,7 @@ pub const struct_FT_FaceRec_ = extern struct {
     //size: FT_Size,
     //charmap: FT_CharMap,
     driver: FT_Driver,
-    memory: FT_Memory,
+    memory: *?FT_Memory,
     //stream: FT_Stream,
     sizes_list: FT_ListRec,
     autohint: FT_Generic,
