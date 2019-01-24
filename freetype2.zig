@@ -357,77 +357,63 @@ pub const FT_Driver = ?*struct_FT_DriverRec_;
 pub const struct_FT_RendererRec_ = @OpaqueType();
 pub const FT_Renderer = ?*struct_FT_RendererRec_;
 pub const FT_Face = struct_FT_FaceRec_;
-pub const FT_ENCODING_NONE = enum_FT_Encoding_.FT_ENCODING_NONE;
-pub const FT_ENCODING_MS_SYMBOL = enum_FT_Encoding_.FT_ENCODING_MS_SYMBOL;
-pub const FT_ENCODING_UNICODE = enum_FT_Encoding_.FT_ENCODING_UNICODE;
-pub const FT_ENCODING_SJIS = enum_FT_Encoding_.FT_ENCODING_SJIS;
-pub const FT_ENCODING_PRC = enum_FT_Encoding_.FT_ENCODING_PRC;
-pub const FT_ENCODING_BIG5 = enum_FT_Encoding_.FT_ENCODING_BIG5;
-pub const FT_ENCODING_WANSUNG = enum_FT_Encoding_.FT_ENCODING_WANSUNG;
-pub const FT_ENCODING_JOHAB = enum_FT_Encoding_.FT_ENCODING_JOHAB;
-pub const FT_ENCODING_GB2312 = enum_FT_Encoding_.FT_ENCODING_GB2312;
-pub const FT_ENCODING_MS_SJIS = enum_FT_Encoding_.FT_ENCODING_MS_SJIS;
-pub const FT_ENCODING_MS_GB2312 = enum_FT_Encoding_.FT_ENCODING_MS_GB2312;
-pub const FT_ENCODING_MS_BIG5 = enum_FT_Encoding_.FT_ENCODING_MS_BIG5;
-pub const FT_ENCODING_MS_WANSUNG = enum_FT_Encoding_.FT_ENCODING_MS_WANSUNG;
-pub const FT_ENCODING_MS_JOHAB = enum_FT_Encoding_.FT_ENCODING_MS_JOHAB;
-pub const FT_ENCODING_ADOBE_STANDARD = enum_FT_Encoding_.FT_ENCODING_ADOBE_STANDARD;
-pub const FT_ENCODING_ADOBE_EXPERT = enum_FT_Encoding_.FT_ENCODING_ADOBE_EXPERT;
-pub const FT_ENCODING_ADOBE_CUSTOM = enum_FT_Encoding_.FT_ENCODING_ADOBE_CUSTOM;
-pub const FT_ENCODING_ADOBE_LATIN_1 = enum_FT_Encoding_.FT_ENCODING_ADOBE_LATIN_1;
-pub const FT_ENCODING_OLD_LATIN_2 = enum_FT_Encoding_.FT_ENCODING_OLD_LATIN_2;
-pub const FT_ENCODING_APPLE_ROMAN = enum_FT_Encoding_.FT_ENCODING_APPLE_ROMAN;
-pub const enum_FT_Encoding_ = extern enum {
-    FT_ENCODING_NONE = 0,
-    FT_ENCODING_MS_SYMBOL = 1937337698,
-    FT_ENCODING_UNICODE = 1970170211,
-    FT_ENCODING_SJIS = 1936353651,
-    FT_ENCODING_PRC = 1734484000,
-    FT_ENCODING_BIG5 = 1651074869,
-    FT_ENCODING_WANSUNG = 2002873971,
-    FT_ENCODING_JOHAB = 1785686113,
-    FT_ENCODING_GB2312 = 1734484000,
-    FT_ENCODING_MS_SJIS = 1936353651,
-    FT_ENCODING_MS_GB2312 = 1734484000,
-    FT_ENCODING_MS_BIG5 = 1651074869,
-    FT_ENCODING_MS_WANSUNG = 2002873971,
-    FT_ENCODING_MS_JOHAB = 1785686113,
-    FT_ENCODING_ADOBE_STANDARD = 1094995778,
-    FT_ENCODING_ADOBE_EXPERT = 1094992453,
-    FT_ENCODING_ADOBE_CUSTOM = 1094992451,
-    FT_ENCODING_ADOBE_LATIN_1 = 1818326065,
-    FT_ENCODING_OLD_LATIN_2 = 1818326066,
-    FT_ENCODING_APPLE_ROMAN = 1634889070,
+
+pub const FT_Encoding = switch (@sizeOf(c_int)) {
+    4 => i32,
+    8 => i64,
+    else => @compileError("sizeof c_int != i32 or i64"),
 };
-pub const FT_Encoding = extern enum {
-    FT_ENCODING_NONE = 0,
-    FT_ENCODING_MS_SYMBOL = 1937337698,
-    FT_ENCODING_UNICODE = 1970170211,
-    FT_ENCODING_SJIS = 1936353651,
-    FT_ENCODING_PRC = 1734484000,
-    FT_ENCODING_BIG5 = 1651074869,
-    FT_ENCODING_WANSUNG = 2002873971,
-    FT_ENCODING_JOHAB = 1785686113,
-    FT_ENCODING_GB2312 = 1734484000,
-    FT_ENCODING_MS_SJIS = 1936353651,
-    FT_ENCODING_MS_GB2312 = 1734484000,
-    FT_ENCODING_MS_BIG5 = 1651074869,
-    FT_ENCODING_MS_WANSUNG = 2002873971,
-    FT_ENCODING_MS_JOHAB = 1785686113,
-    FT_ENCODING_ADOBE_STANDARD = 1094995778,
-    FT_ENCODING_ADOBE_EXPERT = 1094992453,
-    FT_ENCODING_ADOBE_CUSTOM = 1094992451,
-    FT_ENCODING_ADOBE_LATIN_1 = 1818326065,
-    FT_ENCODING_OLD_LATIN_2 = 1818326066,
-    FT_ENCODING_APPLE_ROMAN = 1634889070,
-};
+
+//pub const FT_Encoding = extern enum {
+//    FT_ENCODING_NONE = 0,
+//    FT_ENCODING_MS_SYMBOL = 1937337698,
+//    FT_ENCODING_UNICODE = 1970170211,
+//    FT_ENCODING_SJIS = 1936353651,
+//    FT_ENCODING_PRC = 1734484000,
+//    FT_ENCODING_BIG5 = 1651074869,
+//    FT_ENCODING_WANSUNG = 2002873971,
+//    FT_ENCODING_JOHAB = 1785686113,
+//    FT_ENCODING_GB2312 = 1734484000,
+//    FT_ENCODING_MS_SJIS = 1936353651,
+//    FT_ENCODING_MS_GB2312 = 1734484000,
+//    FT_ENCODING_MS_BIG5 = 1651074869,
+//    FT_ENCODING_MS_WANSUNG = 2002873971,
+//    FT_ENCODING_MS_JOHAB = 1785686113,
+//    FT_ENCODING_ADOBE_STANDARD = 1094995778,
+//    FT_ENCODING_ADOBE_EXPERT = 1094992453,
+//    FT_ENCODING_ADOBE_CUSTOM = 1094992451,
+//    FT_ENCODING_ADOBE_LATIN_1 = 1818326065,
+//    FT_ENCODING_OLD_LATIN_2 = 1818326066,
+//    FT_ENCODING_APPLE_ROMAN = 1634889070,
+//};
+pub const FT_ENCODING_NONE: isize = 0;
+pub const FT_ENCODING_MS_SYMBOL: isize = 1937337698;
+pub const FT_ENCODING_UNICODE: isize = 1970170211;
+pub const FT_ENCODING_SJIS: isize = 1936353651;
+pub const FT_ENCODING_PRC: isize = 1734484000;
+pub const FT_ENCODING_BIG5: isize = 1651074869;
+pub const FT_ENCODING_WANSUNG: isize = 2002873971;
+pub const FT_ENCODING_JOHAB: isize = 1785686113;
+pub const FT_ENCODING_GB2312: isize = 1734484000;
+pub const FT_ENCODING_MS_SJIS: isize = 1936353651;
+pub const FT_ENCODING_MS_GB2312: isize = 1734484000;
+pub const FT_ENCODING_MS_BIG5: isize = 1651074869;
+pub const FT_ENCODING_MS_WANSUNG: isize = 2002873971;
+pub const FT_ENCODING_MS_JOHAB: isize = 1785686113;
+pub const FT_ENCODING_ADOBE_STANDARD: isize = 1094995778;
+pub const FT_ENCODING_ADOBE_EXPERT: isize = 1094992453;
+pub const FT_ENCODING_ADOBE_CUSTOM: isize = 1094992451;
+pub const FT_ENCODING_ADOBE_LATIN_1: isize = 1818326065;
+pub const FT_ENCODING_OLD_LATIN_2: isize = 1818326066;
+pub const FT_ENCODING_APPLE_ROMAN: isize = 1634889070;
+
 pub const struct_FT_CharMapRec_ = extern struct {
     face: ?*FT_Face,
     encoding: FT_Encoding,
     platform_id: FT_UShort,
     encoding_id: FT_UShort,
 };
-pub const FT_CharMap = ?*struct_FT_CharMapRec_;
+pub const FT_CharMap = struct_FT_CharMapRec_;
 pub const struct_FT_SubGlyphRec_ = @OpaqueType();
 pub const FT_SubGlyph = ?*struct_FT_SubGlyphRec_;
 pub const struct_FT_Slot_InternalRec_ = @OpaqueType();
@@ -490,9 +476,10 @@ pub const struct_FT_FaceRec_ = extern struct {
     num_fixed_sizes: FT_Int,
     available_sizes: ?[*]FT_Bitmap_Size,
     num_charmaps: FT_Int,
-    //charmaps: ?[*]FT_CharMap,
+    charmaps: ?[*]?*FT_CharMap, // OK
+    //charmaps: ?*?*FT_CharMap, // OK
+    //charmaps: ?[]?*FT_CharMap, // error: extern structs cannot contain field of type ?[]?*structFT_CharMapRec_
     generic: FT_Generic,
-
     bbox: FT_BBox,
     units_per_EM: FT_UShort,
     ascender: FT_Short,
@@ -504,7 +491,7 @@ pub const struct_FT_FaceRec_ = extern struct {
     underline_thickness: FT_Short,
     glyph: ?*FT_GlyphSlot,
     size: FT_Size,
-    //charmap: FT_CharMap,
+    charmap: ?*FT_CharMap,
     driver: FT_Driver,
     memory: *?FT_Memory,
     stream: *?FT_Stream,
@@ -604,8 +591,8 @@ pub extern fn FT_Get_Track_Kerning(face: ?*FT_Face, point_size: FT_Fixed, degree
 pub extern fn FT_Get_Glyph_Name(face: ?*FT_Face, glyph_index: FT_UInt, buffer: FT_Pointer, buffer_max: FT_UInt) FT_Error;
 pub extern fn FT_Get_Postscript_Name(face: ?*FT_Face) ?[*]const u8;
 pub extern fn FT_Select_Charmap(face: ?*FT_Face, encoding: FT_Encoding) FT_Error;
-pub extern fn FT_Set_Charmap(face: ?*FT_Face, charmap: FT_CharMap) FT_Error;
-pub extern fn FT_Get_Charmap_Index(charmap: FT_CharMap) FT_Int;
+pub extern fn FT_Set_Charmap(face: ?*FT_Face, charmap: ?*FT_CharMap) FT_Error;
+pub extern fn FT_Get_Charmap_Index(charmap: ?*FT_CharMap) FT_Int;
 pub extern fn FT_Get_Char_Index(face: ?*FT_Face, charcode: FT_ULong) FT_UInt;
 pub extern fn FT_Get_First_Char(face: ?*FT_Face, agindex: ?[*]FT_UInt) FT_ULong;
 pub extern fn FT_Get_Next_Char(face: ?*FT_Face, char_code: FT_ULong, agindex: ?[*]FT_UInt) FT_ULong;
