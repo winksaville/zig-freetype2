@@ -21,9 +21,9 @@ pub const union_FT_StreamDesc_ = extern union {
     pointer: ?*c_void,
 };
 pub const FT_StreamDesc = union_FT_StreamDesc_;
-pub const FT_Stream = ?*struct_FT_StreamRec_;
-pub const FT_Stream_IoFunc = ?extern fn(FT_Stream, c_ulong, ?[*]u8, c_ulong) c_ulong;
-pub const FT_Stream_CloseFunc = ?extern fn(FT_Stream) void;
+pub const FT_Stream = struct_FT_StreamRec_;
+pub const FT_Stream_IoFunc = ?extern fn(?*FT_Stream, c_ulong, ?[*]u8, c_ulong) c_ulong;
+pub const FT_Stream_CloseFunc = ?extern fn(?*FT_Stream) void;
 pub const struct_FT_StreamRec_ = extern struct {
     base: ?[*]u8,
     size: c_ulong,
@@ -507,7 +507,7 @@ pub const struct_FT_FaceRec_ = extern struct {
     //charmap: FT_CharMap,
     driver: FT_Driver,
     memory: *?FT_Memory,
-    //stream: FT_Stream,
+    stream: *?FT_Stream,
     sizes_list: FT_ListRec,
     autohint: FT_Generic,
     extensions: ?*c_void,
@@ -530,7 +530,7 @@ pub const struct_FT_Open_Args_ = extern struct {
     memory_base: ?[*]const FT_Byte,
     memory_size: FT_Long,
     pathname: ?[*]FT_String,
-    stream: FT_Stream,
+    stream: *?FT_Stream,
     driver: FT_Module,
     num_params: FT_Int,
     params: ?[*]FT_Parameter,
