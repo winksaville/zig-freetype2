@@ -356,7 +356,7 @@ pub const struct_FT_DriverRec_ = @OpaqueType();
 pub const FT_Driver = ?*struct_FT_DriverRec_;
 pub const struct_FT_RendererRec_ = @OpaqueType();
 pub const FT_Renderer = ?*struct_FT_RendererRec_;
-pub const FT_Face = ?*struct_FT_FaceRec_;
+pub const FT_Face = struct_FT_FaceRec_;
 pub const FT_ENCODING_NONE = enum_FT_Encoding_.FT_ENCODING_NONE;
 pub const FT_ENCODING_MS_SYMBOL = enum_FT_Encoding_.FT_ENCODING_MS_SYMBOL;
 pub const FT_ENCODING_UNICODE = enum_FT_Encoding_.FT_ENCODING_UNICODE;
@@ -422,7 +422,7 @@ pub const FT_Encoding = extern enum {
     FT_ENCODING_APPLE_ROMAN = 1634889070,
 };
 pub const struct_FT_CharMapRec_ = extern struct {
-    face: FT_Face,
+    face: ?*FT_Face,
     encoding: FT_Encoding,
     platform_id: FT_UShort,
     encoding_id: FT_UShort,
@@ -434,7 +434,7 @@ pub const struct_FT_Slot_InternalRec_ = @OpaqueType();
 pub const FT_Slot_Internal = ?*struct_FT_Slot_InternalRec_;
 pub const struct_FT_GlyphSlotRec_ = extern struct {
     library: FT_Library,
-    face: FT_Face,
+    face: ?*FT_Face,
     next: FT_GlyphSlot,
     reserved: FT_UInt,
     generic: FT_Generic,
@@ -471,7 +471,7 @@ pub const FT_Size_Metrics = struct_FT_Size_Metrics_;
 pub const struct_FT_Size_InternalRec_ = @OpaqueType();
 pub const FT_Size_Internal = ?*struct_FT_Size_InternalRec_;
 pub const struct_FT_SizeRec_ = extern struct {
-    face: FT_Face,
+    face: ?*FT_Face,
     generic: FT_Generic,
     metrics: FT_Size_Metrics,
     internal: FT_Size_Internal,
@@ -503,7 +503,7 @@ pub const struct_FT_FaceRec_ = extern struct {
     underline_position: FT_Short,
     underline_thickness: FT_Short,
     //glyph: FT_GlyphSlot,
-    //size: FT_Size,
+    size: FT_Size,
     //charmap: FT_CharMap,
     driver: FT_Driver,
     memory: *?FT_Memory,
@@ -536,14 +536,14 @@ pub const struct_FT_Open_Args_ = extern struct {
     params: ?[*]FT_Parameter,
 };
 pub const FT_Open_Args = struct_FT_Open_Args_;
-pub extern fn FT_New_Face(library: FT_Library, filepathname: ?[*]const u8, face_index: FT_Long, aface: ?*FT_Face) FT_Error;
-pub extern fn FT_New_Memory_Face(library: FT_Library, file_base: ?[*]const FT_Byte, file_size: FT_Long, face_index: FT_Long, aface: ?*FT_Face) FT_Error;
-pub extern fn FT_Open_Face(library: FT_Library, args: ?[*]const FT_Open_Args, face_index: FT_Long, aface: ?*FT_Face) FT_Error;
-pub extern fn FT_Attach_File(face: FT_Face, filepathname: ?[*]const u8) FT_Error;
-pub extern fn FT_Attach_Stream(face: FT_Face, parameters: ?[*]FT_Open_Args) FT_Error;
-pub extern fn FT_Reference_Face(face: FT_Face) FT_Error;
-pub extern fn FT_Done_Face(face: FT_Face) FT_Error;
-pub extern fn FT_Select_Size(face: FT_Face, strike_index: FT_Int) FT_Error;
+pub extern fn FT_New_Face(library: FT_Library, filepathname: ?[*]const u8, face_index: FT_Long, aface: ?*?*FT_Face) FT_Error;
+pub extern fn FT_New_Memory_Face(library: FT_Library, file_base: ?[*]const FT_Byte, file_size: FT_Long, face_index: FT_Long, aface: ?*?*FT_Face) FT_Error;
+pub extern fn FT_Open_Face(library: FT_Library, args: ?[*]const FT_Open_Args, face_index: FT_Long, aface: ?*?*FT_Face) FT_Error;
+pub extern fn FT_Attach_File(face: ?*FT_Face, filepathname: ?[*]const u8) FT_Error;
+pub extern fn FT_Attach_Stream(face: ?*FT_Face, parameters: ?[*]FT_Open_Args) FT_Error;
+pub extern fn FT_Reference_Face(face: ?*FT_Face) FT_Error;
+pub extern fn FT_Done_Face(face: ?*FT_Face) FT_Error;
+pub extern fn FT_Select_Size(face: ?*FT_Face, strike_index: FT_Int) FT_Error;
 pub const FT_SIZE_REQUEST_TYPE_NOMINAL = enum_FT_Size_Request_Type_.FT_SIZE_REQUEST_TYPE_NOMINAL;
 pub const FT_SIZE_REQUEST_TYPE_REAL_DIM = enum_FT_Size_Request_Type_.FT_SIZE_REQUEST_TYPE_REAL_DIM;
 pub const FT_SIZE_REQUEST_TYPE_BBOX = enum_FT_Size_Request_Type_.FT_SIZE_REQUEST_TYPE_BBOX;
@@ -568,12 +568,12 @@ pub const struct_FT_Size_RequestRec_ = extern struct {
 };
 pub const FT_Size_RequestRec = struct_FT_Size_RequestRec_;
 pub const FT_Size_Request = ?*struct_FT_Size_RequestRec_;
-pub extern fn FT_Request_Size(face: FT_Face, req: FT_Size_Request) FT_Error;
-pub extern fn FT_Set_Char_Size(face: FT_Face, char_width: FT_F26Dot6, char_height: FT_F26Dot6, horz_resolution: FT_UInt, vert_resolution: FT_UInt) FT_Error;
-pub extern fn FT_Set_Pixel_Sizes(face: FT_Face, pixel_width: FT_UInt, pixel_height: FT_UInt) FT_Error;
-pub extern fn FT_Load_Glyph(face: FT_Face, glyph_index: FT_UInt, load_flags: FT_Int32) FT_Error;
-pub extern fn FT_Load_Char(face: FT_Face, char_code: FT_ULong, load_flags: FT_Int32) FT_Error;
-pub extern fn FT_Set_Transform(face: FT_Face, matrix: ?[*]FT_Matrix, delta: ?[*]FT_Vector) void;
+pub extern fn FT_Request_Size(face: ?*FT_Face, req: FT_Size_Request) FT_Error;
+pub extern fn FT_Set_Char_Size(face: ?*FT_Face, char_width: FT_F26Dot6, char_height: FT_F26Dot6, horz_resolution: FT_UInt, vert_resolution: FT_UInt) FT_Error;
+pub extern fn FT_Set_Pixel_Sizes(face: ?*FT_Face, pixel_width: FT_UInt, pixel_height: FT_UInt) FT_Error;
+pub extern fn FT_Load_Glyph(face: ?*FT_Face, glyph_index: FT_UInt, load_flags: FT_Int32) FT_Error;
+pub extern fn FT_Load_Char(face: ?*FT_Face, char_code: FT_ULong, load_flags: FT_Int32) FT_Error;
+pub extern fn FT_Set_Transform(face: ?*FT_Face, matrix: ?[*]FT_Matrix, delta: ?[*]FT_Vector) void;
 pub const FT_RENDER_MODE_NORMAL = enum_FT_Render_Mode_.FT_RENDER_MODE_NORMAL;
 pub const FT_RENDER_MODE_LIGHT = enum_FT_Render_Mode_.FT_RENDER_MODE_LIGHT;
 pub const FT_RENDER_MODE_MONO = enum_FT_Render_Mode_.FT_RENDER_MODE_MONO;
@@ -599,25 +599,25 @@ pub const enum_FT_Kerning_Mode_ = extern enum {
     FT_KERNING_UNSCALED = 2,
 };
 pub const FT_Kerning_Mode = enum_FT_Kerning_Mode_;
-pub extern fn FT_Get_Kerning(face: FT_Face, left_glyph: FT_UInt, right_glyph: FT_UInt, kern_mode: FT_UInt, akerning: ?[*]FT_Vector) FT_Error;
-pub extern fn FT_Get_Track_Kerning(face: FT_Face, point_size: FT_Fixed, degree: FT_Int, akerning: ?[*]FT_Fixed) FT_Error;
-pub extern fn FT_Get_Glyph_Name(face: FT_Face, glyph_index: FT_UInt, buffer: FT_Pointer, buffer_max: FT_UInt) FT_Error;
-pub extern fn FT_Get_Postscript_Name(face: FT_Face) ?[*]const u8;
-pub extern fn FT_Select_Charmap(face: FT_Face, encoding: FT_Encoding) FT_Error;
-pub extern fn FT_Set_Charmap(face: FT_Face, charmap: FT_CharMap) FT_Error;
+pub extern fn FT_Get_Kerning(face: ?*FT_Face, left_glyph: FT_UInt, right_glyph: FT_UInt, kern_mode: FT_UInt, akerning: ?[*]FT_Vector) FT_Error;
+pub extern fn FT_Get_Track_Kerning(face: ?*FT_Face, point_size: FT_Fixed, degree: FT_Int, akerning: ?[*]FT_Fixed) FT_Error;
+pub extern fn FT_Get_Glyph_Name(face: ?*FT_Face, glyph_index: FT_UInt, buffer: FT_Pointer, buffer_max: FT_UInt) FT_Error;
+pub extern fn FT_Get_Postscript_Name(face: ?*FT_Face) ?[*]const u8;
+pub extern fn FT_Select_Charmap(face: ?*FT_Face, encoding: FT_Encoding) FT_Error;
+pub extern fn FT_Set_Charmap(face: ?*FT_Face, charmap: FT_CharMap) FT_Error;
 pub extern fn FT_Get_Charmap_Index(charmap: FT_CharMap) FT_Int;
-pub extern fn FT_Get_Char_Index(face: FT_Face, charcode: FT_ULong) FT_UInt;
-pub extern fn FT_Get_First_Char(face: FT_Face, agindex: ?[*]FT_UInt) FT_ULong;
-pub extern fn FT_Get_Next_Char(face: FT_Face, char_code: FT_ULong, agindex: ?[*]FT_UInt) FT_ULong;
-pub extern fn FT_Face_Properties(face: FT_Face, num_properties: FT_UInt, properties: ?[*]FT_Parameter) FT_Error;
-pub extern fn FT_Get_Name_Index(face: FT_Face, glyph_name: ?[*]FT_String) FT_UInt;
+pub extern fn FT_Get_Char_Index(face: ?*FT_Face, charcode: FT_ULong) FT_UInt;
+pub extern fn FT_Get_First_Char(face: ?*FT_Face, agindex: ?[*]FT_UInt) FT_ULong;
+pub extern fn FT_Get_Next_Char(face: ?*FT_Face, char_code: FT_ULong, agindex: ?[*]FT_UInt) FT_ULong;
+pub extern fn FT_Face_Properties(face: ?*FT_Face, num_properties: FT_UInt, properties: ?[*]FT_Parameter) FT_Error;
+pub extern fn FT_Get_Name_Index(face: ?*FT_Face, glyph_name: ?[*]FT_String) FT_UInt;
 pub extern fn FT_Get_SubGlyph_Info(glyph: FT_GlyphSlot, sub_index: FT_UInt, p_index: ?[*]FT_Int, p_flags: ?[*]FT_UInt, p_arg1: ?[*]FT_Int, p_arg2: ?[*]FT_Int, p_transform: ?[*]FT_Matrix) FT_Error;
-pub extern fn FT_Get_FSType_Flags(face: FT_Face) FT_UShort;
-pub extern fn FT_Face_GetCharVariantIndex(face: FT_Face, charcode: FT_ULong, variantSelector: FT_ULong) FT_UInt;
-pub extern fn FT_Face_GetCharVariantIsDefault(face: FT_Face, charcode: FT_ULong, variantSelector: FT_ULong) FT_Int;
-pub extern fn FT_Face_GetVariantSelectors(face: FT_Face) ?[*]FT_UInt32;
-pub extern fn FT_Face_GetVariantsOfChar(face: FT_Face, charcode: FT_ULong) ?[*]FT_UInt32;
-pub extern fn FT_Face_GetCharsOfVariant(face: FT_Face, variantSelector: FT_ULong) ?[*]FT_UInt32;
+pub extern fn FT_Get_FSType_Flags(face: ?*FT_Face) FT_UShort;
+pub extern fn FT_Face_GetCharVariantIndex(face: ?*FT_Face, charcode: FT_ULong, variantSelector: FT_ULong) FT_UInt;
+pub extern fn FT_Face_GetCharVariantIsDefault(face: ?*FT_Face, charcode: FT_ULong, variantSelector: FT_ULong) FT_Int;
+pub extern fn FT_Face_GetVariantSelectors(face: ?*FT_Face) ?[*]FT_UInt32;
+pub extern fn FT_Face_GetVariantsOfChar(face: ?*FT_Face, charcode: FT_ULong) ?[*]FT_UInt32;
+pub extern fn FT_Face_GetCharsOfVariant(face: ?*FT_Face, variantSelector: FT_ULong) ?[*]FT_UInt32;
 pub extern fn FT_MulDiv(a: FT_Long, b: FT_Long, c: FT_Long) FT_Long;
 pub extern fn FT_MulFix(a: FT_Long, b: FT_Long) FT_Long;
 pub extern fn FT_DivFix(a: FT_Long, b: FT_Long) FT_Long;
@@ -626,5 +626,5 @@ pub extern fn FT_CeilFix(a: FT_Fixed) FT_Fixed;
 pub extern fn FT_FloorFix(a: FT_Fixed) FT_Fixed;
 pub extern fn FT_Vector_Transform(vec: ?[*]FT_Vector, matrix: ?[*]const FT_Matrix) void;
 pub extern fn FT_Library_Version(library: FT_Library, amajor: ?[*]FT_Int, aminor: ?[*]FT_Int, apatch: ?[*]FT_Int) void;
-pub extern fn FT_Face_CheckTrueTypePatents(face: FT_Face) FT_Bool;
-pub extern fn FT_Face_SetUnpatentedHinting(face: FT_Face, value: FT_Bool) FT_Bool;
+pub extern fn FT_Face_CheckTrueTypePatents(face: ?*FT_Face) FT_Bool;
+pub extern fn FT_Face_SetUnpatentedHinting(face: ?*FT_Face, value: FT_Bool) FT_Bool;

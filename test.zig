@@ -15,7 +15,7 @@ test "test-freetype2" {
 
     const cfilename = c"modules/3d-test-resources/liberation-fonts-ttf-2.00.4/liberation/LiberationSans-Regular.ttf";
 
-    var face: ft2.FT_Face = undefined;
+    var face: ?*ft2.FT_Face = undefined;
     assert(ft2.FT_New_Face(library, cfilename, 0, &face) == 0);
 
     var image: [HEIGHT][WIDTH]u8 = undefined;
