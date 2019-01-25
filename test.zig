@@ -7,17 +7,31 @@ const ft2 = @import("freetype2.zig");
 const PTS: u32 = 20;       // 20 "points" for character size 20/64 of inch
 const DPI: u32 = 100;      // dots per inch
 
-const WIDTH: u32 =  100;   // image width
-const HEIGHT: u32 =  75;   // image height
+const WIDTH: u32 =  100;   // display width
+const HEIGHT: u32 =  75;   // display height
 
 test "test-freetype2" {
+    // Setup parameters
+
+    // Filename for font
+    const cfilename = c"modules/3d-test-resources/liberation-fonts-ttf-2.00.4/LiberationSans-Regular.ttf";
+
+    // Convert Rotate angle in radians for font
+    var angleInDegrees = f64(0.0);
+    var angle: ft2.FT_Fixed = @floatToInt(ft2.FT_Fixed, (angleInDegrees / 360.0) * std.math.pi * 2.0);
+
+    // Text to display
+    var text = "pinky";
+
+    // Height of display
+    var target_height = HEIGHT;
+
     // Init FT library
     var pLibrary: ?*ft2.FT_Library = undefined;
     assert( ft2.FT_Init_FreeType( &pLibrary ) == 0);
     defer assert(ft2.FT_Done_FreeType(pLibrary) == 0);
 
     // Load a type face
-    const cfilename = c"modules/3d-test-resources/liberation-fonts-ttf-2.00.4/LiberationSans-Regular.ttf";
     var pFace: ?*ft2.FT_Face = undefined;
     assert(ft2.FT_New_Face(pLibrary, cfilename, 0, &pFace) == 0);
     defer assert(ft2.FT_Done_Face(pFace) == 0);
