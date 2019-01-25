@@ -56,6 +56,7 @@ test "test-freetype2" {
     pen.x = 10 * 64;
     pen.y = 10 * 64;
 
+    // Create and Initialize image
     var image: [HEIGHT][WIDTH]u8 = undefined;
 
     var x: usize = 0;
@@ -71,5 +72,11 @@ test "test-freetype2" {
         while (x < WIDTH) : (x += 1) {
             assert(image[y][x] == 0);
         }
+    }
+
+    // Loop to transform
+    var n: usize = 0;
+    while (n < text.len) : (n += 1) {
+        ft2.FT_Set_Transform(pFace, &matrix, &pen);
     }
 }

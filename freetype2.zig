@@ -597,7 +597,7 @@ pub extern fn FT_Set_Char_Size(face: ?*FT_Face, char_width: FT_F26Dot6, char_hei
 pub extern fn FT_Set_Pixel_Sizes(face: ?*FT_Face, pixel_width: FT_UInt, pixel_height: FT_UInt) FT_Error;
 pub extern fn FT_Load_Glyph(face: ?*FT_Face, glyph_index: FT_UInt, load_flags: FT_Int32) FT_Error;
 pub extern fn FT_Load_Char(face: ?*FT_Face, char_code: FT_ULong, load_flags: FT_Int32) FT_Error;
-pub extern fn FT_Set_Transform(face: ?*FT_Face, matrix: ?[*]FT_Matrix, delta: ?[*]FT_Vector) void;
+pub extern fn FT_Set_Transform(face: ?*FT_Face, matrix: ?*FT_Matrix, delta: ?*FT_Vector) void;
 pub const FT_RENDER_MODE_NORMAL = enum_FT_Render_Mode_.FT_RENDER_MODE_NORMAL;
 pub const FT_RENDER_MODE_LIGHT = enum_FT_Render_Mode_.FT_RENDER_MODE_LIGHT;
 pub const FT_RENDER_MODE_MONO = enum_FT_Render_Mode_.FT_RENDER_MODE_MONO;
