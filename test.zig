@@ -1,4 +1,5 @@
 const std = @import("std");
+const math = std.math;
 const assert = std.debug.assert;
 const warn = std.debug.warn;
 
@@ -18,7 +19,7 @@ test "test-freetype2" {
 
     // Convert Rotate angle in radians for font
     var angleInDegrees = f64(0.0);
-    var angle: ft2.FT_Fixed = @floatToInt(ft2.FT_Fixed, (angleInDegrees / 360.0) * std.math.pi * 2.0);
+    var angle: ft2.FT_Fixed = @floatToInt(ft2.FT_Fixed, (angleInDegrees / 360.0) * math.pi * 2.0);
 
     // Text to display
     var text = "pinky";
