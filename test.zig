@@ -5,14 +5,28 @@ const warn = std.debug.warn;
 
 const ft2 = @import("freetype2.zig");
 
-const PTS: u32 = 20;       // 20 "points" for character size 20/64 of inch
-const DPI: u32 = 100;      // dots per inch
+const Zcint = ft2.mapCtoZigType(c_int);
 
-const WIDTH: u32 =  100;   // display width
-const HEIGHT: u32 =  75;   // display height
+const PTS: Zcint = 20;       // 20 "points" for character size 20/64 of inch
+const DPI: Zcint = 100;      // dots per inch
+
+const WIDTH: Zcint =  100;   // display width
+const HEIGHT: Zcint =  75;   // display height
 
 fn scaledInt(comptime IntType: type, v: f64, scale: IntType) IntType {
      return @floatToInt(IntType, v * @intToFloat(f64, scale));
+}
+
+fn setImage(image: *[HEIGHT][WIDTH]u8, v: u8) void {
+    var x: Zcint = 0;
+    var y: Zcint = 0;
+
+    while (y < HEIGHT) : (y += 1) {
+        while (x < WIDTH) : (x += 1) {
+            image[@intCast(usize, y)][@intCast(usize, x)] = v;
+        }
+    }
+
 }
 
 test "test-freetype2" {
@@ -58,23 +72,17 @@ test "test-freetype2" {
 
     // Create and Initialize image
     var image: [HEIGHT][WIDTH]u8 = undefined;
+    setImage(&image, 0);
 
-    var x: usize = 0;
-    var y: usize = 0;
-
+    var x: Zcint = 0;
+    var y: Zcint = 0;
     while (y < HEIGHT) : (y += 1) {
         while (x < WIDTH) : (x += 1) {
-            image[y][x] = 0;
+            assert(image[@intCast(usize, y)][@intCast(usize, x)] == 0);
         }
     }
 
-    while (y < HEIGHT) : (y += 1) {
-        while (x < WIDTH) : (x += 1) {
-            assert(image[y][x] == 0);
-        }
-    }
-
-    // Loop to transform
+    // Loop to print characters to image buffer
     var n: usize = 0;
     while (n < text.len) : (n += 1) {
         // Setup transform
