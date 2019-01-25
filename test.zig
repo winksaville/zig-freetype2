@@ -77,6 +77,10 @@ test "test-freetype2" {
     // Loop to transform
     var n: usize = 0;
     while (n < text.len) : (n += 1) {
+        // Setup transform
         ft2.FT_Set_Transform(pFace, &matrix, &pen);
+
+        // Load glyph image into slot
+        assert(ft2.FT_Load_Char(pFace, text[n], ft2.FT_LOAD_RENDER) == 0);
     }
 }
