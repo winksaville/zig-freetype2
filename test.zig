@@ -51,6 +51,11 @@ test "test-freetype2" {
     matrix.yx = scaledInt(ft2.FT_Fixed, math.sin(angle), 0x10000);
     matrix.yy = scaledInt(ft2.FT_Fixed, math.cos(angle), 0x10000);
 
+    // Setup pen location
+    var pen: ft2.FT_Vector = undefined;
+    pen.x = 10 * 64;
+    pen.y = 10 * 64;
+
     var image: [HEIGHT][WIDTH]u8 = undefined;
 
     var x: usize = 0;
