@@ -29,6 +29,9 @@ fn setImage(image: *[HEIGHT][WIDTH]u8, v: u8) void {
 
 }
 
+fn drawBitMap(image: *[HEIGHT][WIDTH]u8, bitmap: *ft2.FT_Bitmap, x: Zcint, y: Zcint) void {
+}
+
 test "test-freetype2" {
     // Setup parameters
 
@@ -83,6 +86,7 @@ test "test-freetype2" {
     }
 
     // Loop to print characters to image buffer
+    var slot: *ft2.FT_GlyphSlot = (pFace.?.glyph) orelse return error.NoGlyphSlot;
     var n: usize = 0;
     while (n < text.len) : (n += 1) {
         // Setup transform
@@ -90,5 +94,7 @@ test "test-freetype2" {
 
         // Load glyph image into slot
         assert(ft2.FT_Load_Char(pFace, text[n], ft2.FT_LOAD_RENDER) == 0);
+
+        drawBitMap(&image, &slot.bitmap, slot.bitmap_left, target_height - slot.bitmap_top);
     }
 }
