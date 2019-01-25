@@ -11,13 +11,16 @@ const WIDTH: u32 =  100;   // image width
 const HEIGHT: u32 =  75;   // image height
 
 test "test-freetype2" {
+    // Init FT library
     var pLibrary: ?*ft2.FT_Library = undefined;
     assert( ft2.FT_Init_FreeType( &pLibrary ) == 0);
+    defer assert(ft2.FT_Done_FreeType(pLibrary) == 0);
 
+    // Load a type face
     const cfilename = c"modules/3d-test-resources/liberation-fonts-ttf-2.00.4/LiberationSans-Regular.ttf";
-
     var pFace: ?*ft2.FT_Face = undefined;
     assert(ft2.FT_New_Face(pLibrary, cfilename, 0, &pFace) == 0);
+    defer assert(ft2.FT_Done_Face(pFace) == 0);
 
     var image: [HEIGHT][WIDTH]u8 = undefined;
 
@@ -35,7 +38,4 @@ test "test-freetype2" {
             assert(image[y][x] == 0);
         }
     }
-
-    assert(ft2.FT_Done_Face(pFace) == 0);
-    assert(ft2.FT_Done_FreeType(pLibrary) == 0);
 }
