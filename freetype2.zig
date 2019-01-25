@@ -1,6 +1,9 @@
 const builtin = @import("builtin");
 const TypeId = builtin.TypeId;
 
+const std = @import("std");
+const assert = std.debug.assert;
+
 fn mapCtoZigTypeFloat(comptime T: type) type {
     return switch (@sizeOf(T)) {
         2 => f16,
@@ -38,6 +41,47 @@ pub fn mapCtoZigType(comptime T: type) type {
     };
 }
 
+pub const FT_LOAD_DEFAULT =                     0x0;
+pub const FT_LOAD_NO_SCALE =                   ( 1 << 0 );
+pub const FT_LOAD_NO_HINTING =                 ( 1 << 1 );
+pub const FT_LOAD_RENDER =                     ( 1 << 2 );
+pub const FT_LOAD_NO_BITMAP =                  ( 1 << 3 );
+pub const FT_LOAD_VERTICAL_LAYOUT =            ( 1 << 4 );
+pub const FT_LOAD_FORCE_AUTOHINT =             ( 1 << 5 );
+pub const FT_LOAD_CROP_BITMAP =                ( 1 << 6 );
+pub const FT_LOAD_PEDANTIC =                   ( 1 << 7 );
+pub const FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH =( 1 << 9 );
+pub const FT_LOAD_NO_RECURSE =                 ( 1 << 10 );
+pub const FT_LOAD_IGNORE_TRANSFORM =           ( 1 << 11 );
+pub const FT_LOAD_MONOCHROME =                 ( 1 << 12 );
+pub const FT_LOAD_LINEAR_DESIGN =              ( 1 << 13 );
+pub const FT_LOAD_NO_AUTOHINT =                ( 1 << 15 );
+pub const FT_LOAD_COLOR =                      ( 1 << 20 );
+pub const FT_LOAD_COMPUTE_METRICS =            ( 1 << 21 );
+pub const FT_LOAD_BITMAP_METRICS_ONLY =        ( 1 << 22 );
+pub const FT_LOAD_ADVANCE_ONLY =               ( 1 << 8 );
+pub const FT_LOAD_SBITS_ONLY =                 ( 1 << 14 );
+
+
+fn FT_LOAD_TARGET_(x: var) @typeOf(x) {
+    return (x & 0xF ) << 16;
+}
+
+pub const FT_LOAD_TARGET_NORMAL =  FT_LOAD_TARGET_( @enumToInt(FT_RENDER_MODE_NORMAL) );
+pub const FT_LOAD_TARGET_MONO =  FT_LOAD_TARGET_( @enumToInt(FT_RENDER_MODE_MONO) );
+pub const FT_LOAD_TARGET_LCD =  FT_LOAD_TARGET_( @enumToInt(FT_RENDER_MODE_LCD) );
+pub const FT_LOAD_TARGET_LCD_V =  FT_LOAD_TARGET_( @enumToInt(FT_RENDER_MODE_LCD_V) );
+
+pub fn FT_LOAD_TARGET_MODE(x: var) @typeOf(x) {
+    return (x >> 16) & 0xF;
+}
+
+test "FT_LOAD_TARGET_MODE" {
+    assert(FT_LOAD_TARGET_MODE(FT_LOAD_TARGET_NORMAL) == @enumToInt(FT_RENDER_MODE_NORMAL));
+    assert(FT_LOAD_TARGET_MODE(FT_LOAD_TARGET_MONO) == @enumToInt(FT_RENDER_MODE_MONO));
+    assert(FT_LOAD_TARGET_MODE(FT_LOAD_TARGET_LCD) == @enumToInt(FT_RENDER_MODE_LCD));
+    assert(FT_LOAD_TARGET_MODE(FT_LOAD_TARGET_LCD_V) == @enumToInt(FT_RENDER_MODE_LCD_V));
+}
 
 pub const FT_Int16 = c_short;
 pub const FT_UInt16 = c_ushort;
