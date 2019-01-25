@@ -35,4 +35,7 @@ test "test-freetype2" {
             assert(image[y][x] == 0);
         }
     }
+
+    assert(ft2.FT_Done_Face(pFace) == 0);
+    assert(ft2.FT_Done_FreeType(pLibrary) == 0);
 }
