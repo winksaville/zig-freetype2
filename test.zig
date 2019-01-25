@@ -11,6 +11,10 @@ const DPI: u32 = 100;      // dots per inch
 const WIDTH: u32 =  100;   // display width
 const HEIGHT: u32 =  75;   // display height
 
+fn scaledInt(comptime IntType: type, v: f64, scale: IntType) IntType {
+     return @floatToInt(IntType, v * @intToFloat(f64, scale));
+}
+
 test "test-freetype2" {
     // Setup parameters
 
@@ -19,7 +23,7 @@ test "test-freetype2" {
 
     // Convert Rotate angle in radians for font
     var angleInDegrees = f64(0.0);
-    var angle: ft2.FT_Fixed = @floatToInt(ft2.FT_Fixed, (angleInDegrees / 360.0) * math.pi * 2.0);
+    var angle = (angleInDegrees / 360.0) * math.pi * 2.0;
 
     // Text to display
     var text = "pinky";
@@ -39,6 +43,13 @@ test "test-freetype2" {
 
     // Set character size
     assert(ft2.FT_Set_Char_Size(pFace, PTS * 64, 0, DPI, 0) == 0);
+
+    // Setup matrix
+    var matrix: ft2.FT_Matrix = undefined;
+    matrix.xx = scaledInt(ft2.FT_Fixed, math.cos(angle), 0x10000);
+    matrix.xy = scaledInt(ft2.FT_Fixed, -math.sin(angle), 0x10000);
+    matrix.yx = scaledInt(ft2.FT_Fixed, math.sin(angle), 0x10000);
+    matrix.yy = scaledInt(ft2.FT_Fixed, math.cos(angle), 0x10000);
 
     var image: [HEIGHT][WIDTH]u8 = undefined;
 
