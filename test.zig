@@ -22,6 +22,9 @@ test "test-freetype2" {
     assert(ft2.FT_New_Face(pLibrary, cfilename, 0, &pFace) == 0);
     defer assert(ft2.FT_Done_Face(pFace) == 0);
 
+    // Set character size
+    assert(ft2.FT_Set_Char_Size(pFace, PTS * 64, 0, DPI, 0) == 0);
+
     var image: [HEIGHT][WIDTH]u8 = undefined;
 
     var x: usize = 0;
