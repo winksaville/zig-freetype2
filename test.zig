@@ -11,7 +11,7 @@ const WIDTH: u32 =  100;   // image width
 const HEIGHT: u32 =  75;   // image height
 
 test "test-freetype2" {
-    var library: ft2.FT_Library = undefined;
+    var library: ?*ft2.FT_Library = undefined;
     assert( ft2.FT_Init_FreeType( &library ) == 0);
 
     const cfilename = c"modules/3d-test-resources/liberation-fonts-ttf-2.00.4/LiberationSans-Regular.ttf";

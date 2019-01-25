@@ -419,7 +419,7 @@ pub const FT_SubGlyph = ?*struct_FT_SubGlyphRec_;
 pub const struct_FT_Slot_InternalRec_ = @OpaqueType();
 pub const FT_Slot_Internal = ?*struct_FT_Slot_InternalRec_;
 pub const struct_FT_GlyphSlotRec_ = extern struct {
-    library: FT_Library,
+    library: ?*FT_Library,
     face: ?*FT_Face,
     next: ?*FT_GlyphSlot,
     reserved: FT_UInt,
@@ -505,8 +505,8 @@ pub const FT_FaceRec = struct_FT_FaceRec_;
 pub const FT_SizeRec = struct_FT_SizeRec_;
 pub const FT_GlyphSlotRec = struct_FT_GlyphSlotRec_;
 //pub extern fn FT_Init_FreeType(alibrary: ?[*]FT_Library) FT_Error;
-pub extern fn FT_Init_FreeType(alibrary: *FT_Library) FT_Error;
-pub extern fn FT_Done_FreeType(library: FT_Library) FT_Error;
+pub extern fn FT_Init_FreeType(alibrary: *?*FT_Library) FT_Error;
+pub extern fn FT_Done_FreeType(library: ?*FT_Library) FT_Error;
 pub const struct_FT_Parameter_ = extern struct {
     tag: FT_ULong,
     data: FT_Pointer,
@@ -523,9 +523,9 @@ pub const struct_FT_Open_Args_ = extern struct {
     params: ?[*]FT_Parameter,
 };
 pub const FT_Open_Args = struct_FT_Open_Args_;
-pub extern fn FT_New_Face(library: FT_Library, filepathname: ?[*]const u8, face_index: FT_Long, aface: ?*?*FT_Face) FT_Error;
-pub extern fn FT_New_Memory_Face(library: FT_Library, file_base: ?[*]const FT_Byte, file_size: FT_Long, face_index: FT_Long, aface: ?*?*FT_Face) FT_Error;
-pub extern fn FT_Open_Face(library: FT_Library, args: ?[*]const FT_Open_Args, face_index: FT_Long, aface: ?*?*FT_Face) FT_Error;
+pub extern fn FT_New_Face(library: ?*FT_Library, filepathname: ?[*]const u8, face_index: FT_Long, aface: ?*?*FT_Face) FT_Error;
+pub extern fn FT_New_Memory_Face(library: ?*FT_Library, file_base: ?[*]const FT_Byte, file_size: FT_Long, face_index: FT_Long, aface: ?*?*FT_Face) FT_Error;
+pub extern fn FT_Open_Face(library: ?*FT_Library, args: ?[*]const FT_Open_Args, face_index: FT_Long, aface: ?*?*FT_Face) FT_Error;
 pub extern fn FT_Attach_File(face: ?*FT_Face, filepathname: ?[*]const u8) FT_Error;
 pub extern fn FT_Attach_Stream(face: ?*FT_Face, parameters: ?[*]FT_Open_Args) FT_Error;
 pub extern fn FT_Reference_Face(face: ?*FT_Face) FT_Error;
@@ -612,6 +612,6 @@ pub extern fn FT_RoundFix(a: FT_Fixed) FT_Fixed;
 pub extern fn FT_CeilFix(a: FT_Fixed) FT_Fixed;
 pub extern fn FT_FloorFix(a: FT_Fixed) FT_Fixed;
 pub extern fn FT_Vector_Transform(vec: ?[*]FT_Vector, matrix: ?[*]const FT_Matrix) void;
-pub extern fn FT_Library_Version(library: FT_Library, amajor: ?[*]FT_Int, aminor: ?[*]FT_Int, apatch: ?[*]FT_Int) void;
+pub extern fn FT_Library_Version(library: ?*FT_Library, amajor: ?[*]FT_Int, aminor: ?[*]FT_Int, apatch: ?[*]FT_Int) void;
 pub extern fn FT_Face_CheckTrueTypePatents(face: ?*FT_Face) FT_Bool;
 pub extern fn FT_Face_SetUnpatentedHinting(face: ?*FT_Face, value: FT_Bool) FT_Bool;
