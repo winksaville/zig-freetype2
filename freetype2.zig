@@ -1,3 +1,44 @@
+const builtin = @import("builtin");
+const TypeId = builtin.TypeId;
+
+fn mapCtoZigTypeFloat(comptime T: type) type {
+    return switch (@sizeOf(T)) {
+        2 => f16,
+        4 => f32,
+        8 => f64,
+        else => @compileError("Unsupported float type"),
+    };
+}
+
+fn mapCtoZigTypeInt(comptime T: type) type {
+    if (T.is_signed) {
+        return switch (@sizeOf(T)) {
+            1 => i8,
+            2 => i16,
+            4 => i32,
+            8 => i64,
+            else => @compileError("Unsupported signed integer type"),
+        };
+    } else {
+        return switch (@sizeOf(T)) {
+            1 => u8,
+            2 => u16,
+            4 => u32,
+            8 => u64,
+            else => @compileError("Unsupported unsigned integer type"),
+        };
+    }
+}
+
+pub fn mapCtoZigType(comptime T: type) type {
+    return switch (@typeId(T)) {
+        TypeId.Int => mapCtoZigTypeInt(T),
+        TypeId.Float => mapCtoZigTypeFloat(T),
+        else => @compileError("Only TypeId.Int and TypeId.Float are supported"),
+    };
+}
+
+
 pub const FT_Int16 = c_short;
 pub const FT_UInt16 = c_ushort;
 pub const FT_Int32 = c_int;
@@ -358,11 +399,7 @@ pub const struct_FT_RendererRec_ = @OpaqueType();
 pub const FT_Renderer = ?*struct_FT_RendererRec_;
 pub const FT_Face = struct_FT_FaceRec_;
 
-pub const FT_Encoding = switch (@sizeOf(c_int)) {
-    4 => i32,
-    8 => i64,
-    else => @compileError("sizeof c_int != i32 or i64"),
-};
+pub const FT_Encoding = mapCtoZigType(c_int);
 
 //pub const FT_Encoding = extern enum {
 //    FT_ENCODING_NONE = 0,
