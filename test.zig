@@ -7,6 +7,8 @@ const ft2 = @import("freetype2.zig");
 
 const Zcint = ft2.mapCtoZigType(c_int);
 
+const DBG: bool = false;
+
 const PTS: Zcint = 20;       // 20 "points" for character size 20/64 of inch
 const DPI: Zcint = 100;      // dots per inch
 
@@ -26,20 +28,70 @@ fn setImage(image: *[HEIGHT][WIDTH]u8, v: u8) void {
             image[@intCast(usize, y)][@intCast(usize, x)] = v;
         }
     }
-
 }
 
 fn drawBitMap(image: *[HEIGHT][WIDTH]u8, bitmap: *ft2.FT_Bitmap, x: Zcint, y: Zcint) void {
+    var i: Zcint = 0;
+    var j: Zcint = 0;
+    var p: Zcint = 0;
+    var q: Zcint = 0;
+    var glyph_width: Zcint = @intCast(Zcint, bitmap.width);
+    var glyph_height: Zcint = @intCast(Zcint, bitmap.rows);
+    var x_max: Zcint = x + glyph_width;
+    var y_max: Zcint = y + glyph_height;
+    if (DBG) warn("drawBitMap: x={} y={} x_max={} y_max={} glyph_width={} glyph_height={} buffer={*}\n",
+        x, y, x_max, y_max, glyph_width, glyph_height, bitmap.buffer);
+
+    i = x;
+    p = 0;
+    while (i < x_max) {
+        j = y;
+        q = 0;
+        while (j < y_max) {
+            if ((i >= 0) and (j >= 0) and (i < WIDTH) and (j < HEIGHT)) {
+                var idx: usize = @intCast(usize, (q * glyph_width) + p);
+                if (bitmap.buffer == null) return;
+                var ptr: *u8 = @intToPtr(*u8, @ptrToInt(bitmap.buffer.?) + idx);
+                if (DBG) warn("{p}:{x} ", ptr, ptr.*);
+                image[@intCast(usize, j)][@intCast(usize, i)] |= ptr.*;
+            }
+            j += 1;
+            q += 1;
+        }
+        if (DBG) warn("\n");
+
+        i += 1;
+        p += 1;
+    }
+}
+
+fn showImage(image: *[HEIGHT][WIDTH]u8) void {
+    var y: Zcint = 0;
+    while (y < HEIGHT) : (y += 1) {
+        var x: Zcint = 0;
+        if (DBG) warn("{}:{} ", y, x);
+        while (x < WIDTH) : (x += 1) {
+            var ch: u8 = switch (image[@intCast(usize, y)][@intCast(usize, x)]) {
+                0 => u8(' '),
+                1 ... 127 => u8('+'),
+                128 ... 255 => u8('*'),
+            };
+            warn("{c}", ch);
+        }
+        warn("\n");
+    }
 }
 
 test "test-freetype2" {
+    warn("\n");
+
     // Setup parameters
 
     // Filename for font
     const cfilename = c"modules/3d-test-resources/liberation-fonts-ttf-2.00.4/LiberationSans-Regular.ttf";
 
     // Convert Rotate angle in radians for font
-    var angleInDegrees = f64(0.0);
+    var angleInDegrees = f64(45.0);
     var angle = (angleInDegrees / 360.0) * math.pi * 2.0;
 
     // Text to display
@@ -77,6 +129,7 @@ test "test-freetype2" {
     var image: [HEIGHT][WIDTH]u8 = undefined;
     setImage(&image, 0);
 
+    // Verify image is 0
     var x: Zcint = 0;
     var y: Zcint = 0;
     while (y < HEIGHT) : (y += 1) {
@@ -95,6 +148,13 @@ test "test-freetype2" {
         // Load glyph image into slot
         assert(ft2.FT_Load_Char(pFace, text[n], ft2.FT_LOAD_RENDER) == 0);
 
+        // Draw the character
         drawBitMap(&image, &slot.bitmap, slot.bitmap_left, target_height - slot.bitmap_top);
+
+        // Move the pen
+        pen.x += slot.advance.x;
+        pen.y += slot.advance.y;
     }
+
+    showImage(&image);
 }
