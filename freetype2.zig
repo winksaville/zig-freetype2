@@ -78,7 +78,7 @@ pub const struct_FT_StreamRec_ = extern struct {
     limit: ?[*]u8,
 };
 pub const FT_StreamRec = struct_FT_StreamRec_;
-pub const FT_Pos = c_long;
+pub const FT_Pos = mapCtoZigType(c_long);
 pub const struct_FT_Vector_ = extern struct {
     x: FT_Pos,
     y: FT_Pos,
