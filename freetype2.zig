@@ -1,45 +1,5 @@
-const builtin = @import("builtin");
-const TypeId = builtin.TypeId;
-
 const std = @import("std");
 const assert = std.debug.assert;
-
-fn mapCtoZigTypeFloat(comptime T: type) type {
-    return switch (@sizeOf(T)) {
-        2 => f16,
-        4 => f32,
-        8 => f64,
-        else => @compileError("Unsupported float type"),
-    };
-}
-
-fn mapCtoZigTypeInt(comptime T: type) type {
-    if (T.is_signed) {
-        return switch (@sizeOf(T)) {
-            1 => i8,
-            2 => i16,
-            4 => i32,
-            8 => i64,
-            else => @compileError("Unsupported signed integer type"),
-        };
-    } else {
-        return switch (@sizeOf(T)) {
-            1 => u8,
-            2 => u16,
-            4 => u32,
-            8 => u64,
-            else => @compileError("Unsupported unsigned integer type"),
-        };
-    }
-}
-
-pub fn mapCtoZigType(comptime T: type) type {
-    return switch (@typeId(T)) {
-        TypeId.Int => mapCtoZigTypeInt(T),
-        TypeId.Float => mapCtoZigTypeFloat(T),
-        else => @compileError("Only TypeId.Int and TypeId.Float are supported"),
-    };
-}
 
 pub const FT_LOAD_DEFAULT =                     0x0;
 pub const FT_LOAD_NO_SCALE =                   ( 1 << 0 );
@@ -122,7 +82,7 @@ pub const struct_FT_StreamRec_ = extern struct {
     limit: ?[*]u8,
 };
 pub const FT_StreamRec = struct_FT_StreamRec_;
-pub const FT_Pos = mapCtoZigType(c_long);
+pub const FT_Pos = c_long;
 pub const struct_FT_Vector_ = extern struct {
     x: FT_Pos,
     y: FT_Pos,
@@ -443,7 +403,7 @@ pub const struct_FT_RendererRec_ = @OpaqueType();
 pub const FT_Renderer = ?*struct_FT_RendererRec_;
 pub const FT_Face = struct_FT_FaceRec_;
 
-pub const FT_Encoding = mapCtoZigType(c_int);
+pub const FT_Encoding = c_int;
 
 //pub const FT_Encoding = extern enum {
 //    FT_ENCODING_NONE = 0,

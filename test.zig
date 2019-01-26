@@ -1,3 +1,6 @@
+const builtin = @import("builtin");
+const TypeId = builtin.TypeId;
+
 const std = @import("std");
 const math = std.math;
 const assert = std.debug.assert;
@@ -5,7 +8,44 @@ const warn = std.debug.warn;
 
 const ft2 = @import("freetype2.zig");
 
-const Zcint = ft2.mapCtoZigType(c_int);
+fn mapCtoZigTypeFloat(comptime T: type) type {
+    return switch (@sizeOf(T)) {
+        2 => f16,
+        4 => f32,
+        8 => f64,
+        else => @compileError("Unsupported float type"),
+    };
+}
+
+fn mapCtoZigTypeInt(comptime T: type) type {
+    if (T.is_signed) {
+        return switch (@sizeOf(T)) {
+            1 => i8,
+            2 => i16,
+            4 => i32,
+            8 => i64,
+            else => @compileError("Unsupported signed integer type"),
+        };
+    } else {
+        return switch (@sizeOf(T)) {
+            1 => u8,
+            2 => u16,
+            4 => u32,
+            8 => u64,
+            else => @compileError("Unsupported unsigned integer type"),
+        };
+    }
+}
+
+pub fn mapCtoZigType(comptime T: type) type {
+    return switch (@typeId(T)) {
+        TypeId.Int => mapCtoZigTypeInt(T),
+        TypeId.Float => mapCtoZigTypeFloat(T),
+        else => @compileError("Only TypeId.Int and TypeId.Float are supported"),
+    };
+}
+
+const Zcint = mapCtoZigType(c_int);
 
 const DBG: bool = false;
 
