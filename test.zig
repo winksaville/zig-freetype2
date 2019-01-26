@@ -45,7 +45,7 @@ pub fn mapCtoZigType(comptime T: type) type {
     };
 }
 
-const Zcint = mapCtoZigType(c_int);
+const Zcint = c_int; // mapCtoZigType(c_int);
 
 const DBG: bool = false;
 
