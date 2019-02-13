@@ -22,6 +22,35 @@ pub const FT_LOAD_BITMAP_METRICS_ONLY =        ( 1 << 22 );
 pub const FT_LOAD_ADVANCE_ONLY =               ( 1 << 8 );
 pub const FT_LOAD_SBITS_ONLY =                 ( 1 << 14 );
 
+pub fn fixed26_6(whole26: u26, frac6: u6) FT_F26Dot6 {
+    return @intCast(FT_F26Dot6, (whole26 << 6) | frac6);
+}
+
+pub fn f64_fixed26_6(v: f64) FT_F26Dot6 {
+    return @floatToInt(FT_F26Dot6, v * @intToFloat(f64, 0x40));
+}
+
+test "fixed26_6" {
+    assert(0x40 == fixed26_6(1, 0));
+    assert(fixed26_6(1, 0) == f64_fixed26_6(1.0));
+    assert(fixed26_6(1, 0x20) == f64_fixed26_6(1.5));
+    assert(fixed26_6(2, 0) == f64_fixed26_6(2));
+}
+
+pub fn fixed16_16(whole16: u16, frac16: u16) FT_Fixed {
+    return @intCast(FT_Fixed, (@intCast(u32, whole16) << 16) | @intCast(u32, frac16));
+}
+
+pub fn f64_fixed16_16(v: f64) FT_Fixed {
+    return @floatToInt(FT_Fixed, v * @intToFloat(f64, 0x10000));
+}
+
+test "fixed16_16" {
+    assert(0x10000 == fixed16_16(1, 0));
+    assert(fixed16_16(1, 0) == f64_fixed16_16(1.0));
+    assert(fixed16_16(1, 0x8000) == f64_fixed16_16(1.5));
+    assert(fixed16_16(2, 0) == f64_fixed16_16(2));
+}
 
 fn FT_LOAD_TARGET_(x: var) @typeOf(x) {
     return (x & 0xF ) << 16;
