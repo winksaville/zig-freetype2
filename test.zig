@@ -49,23 +49,22 @@ const Zcint = c_int; // mapCtoZigType(c_int);
 
 const DBG: bool = false;
 
-const PTS: Zcint = 20;       // 20 "points" for character size 20/64 of inch
-const DPI: Zcint = 100;      // dots per inch
+const PTS: Zcint = 20; // 20 "points" for character size 20/64 of inch
+const DPI: Zcint = 100; // dots per inch
 
-const WIDTH: Zcint =  100;   // display width
-const HEIGHT: Zcint =  75;   // display height
+const WIDTH: Zcint = 100; // display width
+const HEIGHT: Zcint = 75; // display height
 
 fn scaledInt(comptime IntType: type, v: f64, scale: IntType) IntType {
-     return @floatToInt(IntType, v * @intToFloat(f64, scale));
+    return @floatToInt(IntType, v * @intToFloat(f64, scale));
 }
 
 fn setImage(image: *[HEIGHT][WIDTH]u8, v: u8) void {
-    var x: Zcint = 0;
     var y: Zcint = 0;
-
     while (y < HEIGHT) : (y += 1) {
+        var x: Zcint = 0;
         while (x < WIDTH) : (x += 1) {
-            image[@intCast(usize, y)][@intCast(usize, x)] = v;
+            image.*[@intCast(usize, y)][@intCast(usize, x)] = v;
         }
     }
 }
@@ -79,8 +78,8 @@ fn drawBitMap(image: *[HEIGHT][WIDTH]u8, bitmap: *ft2.FT_Bitmap, x: Zcint, y: Zc
     var glyph_height: Zcint = @intCast(Zcint, bitmap.rows);
     var x_max: Zcint = x + glyph_width;
     var y_max: Zcint = y + glyph_height;
-    if (DBG) warn("drawBitMap: x={} y={} x_max={} y_max={} glyph_width={} glyph_height={} buffer={*}\n",
-        x, y, x_max, y_max, glyph_width, glyph_height, bitmap.buffer);
+    if (DBG)
+        warn("drawBitMap: x={} y={} x_max={} y_max={} glyph_width={} glyph_height={} buffer={*}\n", x, y, x_max, y_max, glyph_width, glyph_height, bitmap.buffer);
 
     i = x;
     p = 0;
@@ -111,10 +110,11 @@ fn showImage(image: *[HEIGHT][WIDTH]u8) void {
         var x: Zcint = 0;
         if (DBG) warn("{}:{} ", y, x);
         while (x < WIDTH) : (x += 1) {
-            var ch: u8 = switch (image[@intCast(usize, y)][@intCast(usize, x)]) {
+            var data: u8 = image.*[@intCast(usize, y)][@intCast(usize, x)];
+            var ch: u8 = switch (data) {
                 0 => u8(' '),
-                1 ... 127 => u8('+'),
-                128 ... 255 => u8('*'),
+                1...127 => u8('+'),
+                128...255 => u8('*'),
             };
             warn("{c}", ch);
         }
@@ -131,7 +131,7 @@ test "test-freetype2" {
     const cfilename = c"modules/3d-test-resources/liberation-fonts-ttf-2.00.4/LiberationSans-Regular.ttf";
 
     // Convert Rotate angle in radians for font
-    var angleInDegrees = f64(45.0);
+    var angleInDegrees: f64 = 45.0;
     var angle = (angleInDegrees / 360.0) * math.pi * 2.0;
 
     // Text to display
@@ -142,7 +142,7 @@ test "test-freetype2" {
 
     // Init FT library
     var pLibrary: ?*ft2.FT_Library = undefined;
-    assert( ft2.FT_Init_FreeType( &pLibrary ) == 0);
+    assert(ft2.FT_Init_FreeType(&pLibrary) == 0);
     defer assert(ft2.FT_Done_FreeType(pLibrary) == 0);
 
     // Load a type face
@@ -168,15 +168,14 @@ test "test-freetype2" {
     // Create and Initialize image
     var image: [HEIGHT][WIDTH]u8 = undefined;
     setImage(&image, 0);
-
-    // Verify image is 0
-    var x: Zcint = 0;
     var y: Zcint = 0;
     while (y < HEIGHT) : (y += 1) {
+        var x: Zcint = 0;
         while (x < WIDTH) : (x += 1) {
             assert(image[@intCast(usize, y)][@intCast(usize, x)] == 0);
         }
     }
+    if (DBG) showImage(&image);
 
     // Loop to print characters to image buffer
     var slot: *ft2.FT_GlyphSlot = (pFace.?.glyph) orelse return error.NoGlyphSlot;
